@@ -1,9 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello, World!</title>
-</head>
-<body>
-    <h1>Hello, World!</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        {% if hay_csv %}
+            <div class="text-center">
+                <p class="text-green-500 text-lg font-semibold">Hay un CSV, todo correcto</p>
+                <p class="text-gray-600 mt-2">El archivo CSV se ha cargado correctamente y está listo para su uso.</p>
+            </div>
+        {% else %}
+            <div class="text-center">
+                <p class="text-red-500 text-lg font-semibold">No hay CSV</p>
+                <p class="text-gray-600 mt-2">No se ha encontrado ningún archivo CSV. Por favor, suba un archivo CSV para continuar.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

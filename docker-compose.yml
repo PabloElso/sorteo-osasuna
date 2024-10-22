@@ -20,6 +20,14 @@ services:
       POSTGRES_DB: myproject
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+  
+  node:
+    image: node:14
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npm run build"
+
 
 volumes:
   postgres_data:
