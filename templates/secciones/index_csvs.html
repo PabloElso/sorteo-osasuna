@@ -1,0 +1,27 @@
+<div class="flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div class="text-center">
+            {% if total_csvs == 0 %}
+                <p class="text-red-500 text-lg font-semibold">No hay CSV</p>
+                <p class="text-gray-600 mt-2">No se ha encontrado ningún archivo CSV. Por favor, suba un archivo CSV para continuar.</p>
+            {% elif total_csvs == 1 %}
+                <p class="text-green-500 text-lg font-semibold">Hay 1 CSV</p>
+                <p class="text-gray-600 mt-2">El archivo CSV se ha cargado correctamente y está listo para su uso.</p>
+                <div class="mt-4 flex justify-center">
+                    <a href="{% url 'main_app:procesar_participantes_csv' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Procesar CSV y generar participantes
+                    </a>
+                </div>
+
+            {% else %}
+                <p class="text-green-500 text-lg font-semibold">Hay {{ total_csvs }} CSVs</p>
+                <p class="text-gray-600 mt-2">Debería haber únicamente un archivo CSV con los participantes del sorteo. Por favor, elimina todos los CSV excepto el que va a ser utilizado para seleccionar a los participantes del sorteo.</p>
+                <div class="mt-4 flex justify-center">
+                    <a href="{% url 'admin:main_app_csvparticipantes_changelist' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Ir a la lista de CSVs
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

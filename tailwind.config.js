@@ -5,7 +5,12 @@ module.exports = {
     './**/templates/**/*.html',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        rojoosasuna: '#ff001a',
+        azulosasuna: '#002457',
+      },
+    },
   },
   plugins: [],
 }

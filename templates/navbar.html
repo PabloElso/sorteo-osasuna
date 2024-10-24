@@ -1,0 +1,30 @@
+{% load static %}
+
+<nav class="flex items-center justify-between p-6 bg-gray-100 relative">
+    <!-- Left Section -->
+    <div class="flex items-center space-x-4 bg-rojoosasuna p-4" style="flex: 1; margin-left: 20%;">
+        <ul class="flex space-x-4">
+            <li><a href="{% url 'main_app:index' %}" class="text-white text-2xl px-4 py-2 hover:bg-rojoosasuna rounded">Inicio</a></li>
+            <li><span class="text-white">|</span></li>
+            <li><a href="{% url 'main_app:participantes' %}" class="text-white text-lg px-4 py-2 hover:bg-rojoosasuna rounded">Participantes</a></li>
+            <li><span class="text-white">|</span></li>
+            <li><a href="{% url 'main_app:millares' %}" class="text-white text-lg px-4 py-2 hover:bg-red-600 rounded">Millares</a></li>
+        </ul>
+    </div>
+    
+    <!-- Center Image -->
+    <div class="absolute left-1/2 transform -translate-x-1/2">
+        <img src="{% static 'escudo.png' %}" alt="Logo" class="h-24 w-24">
+    </div>
+    
+    <!-- Right Section -->
+    <div class="flex items-center space-x-4 bg-azulosasuna p-4" style="flex: 1; justify-content: flex-end; margin-right: 20%;">
+        <ul class="flex space-x-4">
+            <li><a href="{% url 'admin:index' %}" class="text-white text-lg px-4 py-2 hover:bg-blue-600 rounded">Admin</a></li>
+            <li><span class="text-white">|</span></li>
+            <li><a href="{% url 'main_app:notas' %}" class="text-white text-lg px-4 py-2 hover:bg-blue-600 rounded">Notas</a></li>
+            <li><span class="text-white">|</span></li>
+            <li><a href="#" class="text-white text-lg px-4 py-2 hover:bg-blue-600 rounded">Otros...</a></li>
+        </ul>
+    </div>
+</nav>
