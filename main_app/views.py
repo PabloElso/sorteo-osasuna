@@ -21,6 +21,8 @@ def participantes(request):
 
 def millares(request):
     context = {}
+    context['total_participantes'] = Participante.objects.all().count()
+    context['participantes'] = Participante.objects.all()
     return render(request, 'millares.html', context)
 
 def notas(request):
@@ -39,4 +41,8 @@ def procesar_participantes_csv(request):
         return redirect('main_app:index')
     csv_participantes = CSVParticipantes.objects.first()
     procesar_csv_participantes(csv_participantes)
+    return redirect('main_app:index')
+
+def realizar_sorteo(request):
+    # TO DO: Implementar la lógica del sorteo
     return redirect('main_app:index')

@@ -9,5 +9,6 @@ urlpatterns = [
     path('participantes/', views.participantes, name='participantes'),
     path('millares/', views.millares, name='millares'),
     path('notas/', views.notas, name='notas'),
+    path('realizar_sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
     # Add other app-specific URLs here
 ]
