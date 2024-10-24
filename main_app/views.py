@@ -29,6 +29,16 @@ def notas(request):
     context = {}
     return render(request, 'notas.html', context)
 
+def herramientas(request):
+    context = {}
+    return render(request, 'herramientas.html', context)
+
+def reiniciar_sistema(request):
+    CSVParticipantes.objects.all().delete()
+    Participante.objects.all().delete()
+    messages.success(request, 'Sistema reiniciado con éxito.')
+    return redirect('main_app:index')
+
 def procesar_participantes_csv(request):
     if CSVParticipantes.objects.all().count() == 0:
         messages.warning(request, 'No hay ningún CSV de participantes para procesar.')

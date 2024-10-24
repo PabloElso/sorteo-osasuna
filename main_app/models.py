@@ -25,6 +25,13 @@ class Participante(models.Model):
         ordering = ['millar', 'posicion_millar', 'numero_socio', 'nombre_y_apellidos']
 
 
+class Millar:
+
+    def __init__(self, numero, participantes):
+        self.numero = numero
+        self.participantes = participantes
+
+
 class Sorteo:
 
     def __init__(self, participantes):

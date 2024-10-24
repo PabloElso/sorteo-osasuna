@@ -4,7 +4,7 @@
     <!-- Left Section -->
     <div class="flex items-center space-x-4 bg-rojoosasuna p-4" style="flex: 1; margin-left: 20%;">
         <ul class="flex space-x-4">
-            <li><a href="{% url 'main_app:index' %}" class="text-white text-2xl px-4 py-2 hover:bg-red-600 rounded">Inicio</a></li>
+            <li><a href="{% url 'main_app:index' %}" class="text-white text-lg px-4 py-2 hover:bg-red-600 rounded">Inicio</a></li>
             <li><span class="text-white">|</span></li>
             <li><a href="{% url 'main_app:participantes' %}" class="text-white text-lg px-4 py-2 hover:bg-red-600 rounded">Participantes</a></li>
             <li><span class="text-white">|</span></li>
@@ -24,7 +24,7 @@
             <li><span class="text-white">|</span></li>
             <li><a href="{% url 'main_app:notas' %}" class="text-white text-lg px-4 py-2 hover:bg-blue-600 rounded">Notas</a></li>
             <li><span class="text-white">|</span></li>
-            <li><a href="#" class="text-white text-lg px-4 py-2 hover:bg-blue-600 rounded">Otros...</a></li>
+            <li><a href="{% url 'main_app:herramientas' %}" class="text-white text-lg px-4 py-2 hover:bg-blue-600 rounded">Herramientas</a></li>
         </ul>
     </div>
 </nav>

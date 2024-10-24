@@ -10,10 +10,15 @@
     <title>Sorteo Osasuna</title>
 </head>
 <body class="bg-gray-100">
-    <div class="mt-16">
+    <div class="my-16">
         {% include 'navbar.html' %}
     </div>
-        <main class="flex items-center justify-center py-24">
+    {% if messages %}
+        <div class="flex items-center justify-center my-4">
+            {% include 'messages.html' %}
+        </div>
+    {% endif %}
+    <main class="flex items-center justify-center py-12">
         {% block content %}
         {% endblock %}
     </main>

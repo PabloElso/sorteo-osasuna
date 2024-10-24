@@ -4,6 +4,11 @@
             {% if total_csvs == 0 %}
                 <p class="text-red-500 text-lg font-semibold">No hay CSV</p>
                 <p class="text-gray-600 mt-2">No se ha encontrado ningún archivo CSV. Por favor, suba un archivo CSV para continuar.</p>
+                <div class="mt-4 flex justify-center">
+                    <a href="{% url 'admin:main_app_csvparticipantes_add' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Subir CSV
+                    </a>
+                </div>
             {% elif total_csvs == 1 %}
                 <p class="text-green-500 text-lg font-semibold">Hay 1 CSV</p>
                 <p class="text-gray-600 mt-2">El archivo CSV se ha cargado correctamente y está listo para su uso.</p>

@@ -1,0 +1,21 @@
+<div class="container mx-auto p-4 w-1/2">
+    {% for message in messages %}
+        <div class="mb-4 p-4 rounded-lg shadow-md 
+            {% if message.tags == 'error' %} bg-red-100 border border-red-400 text-red-700 
+            {% elif message.tags == 'warning' %} bg-yellow-100 border border-yellow-400 text-yellow-700 
+            {% elif message.tags == 'success' %} bg-green-100 border border-green-400 text-green-700 
+            {% elif message.tags == 'info' %} bg-blue-100 border border-blue-400 text-blue-700 
+            {% else %} bg-gray-100 border border-gray-400 text-gray-700 
+            {% endif %}">
+            <span class="font-bold">
+                {% if message.tags == 'error' %} Error:
+                {% elif message.tags == 'warning' %} Aviso:
+                {% elif message.tags == 'success' %} Éxito:
+                {% elif message.tags == 'info' %} Información:
+                {% else %} Mensaje:
+                {% endif %}
+            </span> 
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
