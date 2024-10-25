@@ -3,15 +3,16 @@ from django.contrib import messages
 from .models import CSVParticipantes, Participante, Sorteo
 from .utils import procesar_csv_participantes, crear_sorteo
 
-# Create your views here.
+
+### Views base
 
 def index(request):
     context = {}
     context['total_csvs'] = CSVParticipantes.objects.all().count()
     context['total_participantes'] = Participante.objects.all().count()
     context['participantes'] = Participante.objects.all()
+    context['sorteo_finalizado'] = Participante.objects.filter(ganador=True).count() > 0
     return render(request, 'index.html', context)
-
 
 def participantes(request):
     context = {}
@@ -25,6 +26,9 @@ def millares(request):
     context['participantes'] = Participante.objects.all()
     context['sorteo'] = crear_sorteo()
     return render(request, 'millares.html', context)
+
+
+### Views secundarias: para desarrollo y pruebas principalmente
 
 def notas(request):
     context = {}
@@ -44,9 +48,14 @@ def resetear_ganadores(request):
     Participante.objects.update(
         ganador=None,
         ganador_primera_fase=None,
-        ganador_segunda_fase=None
+        ganador_segunda_fase=None, 
+        ganador_tercera_fase=None,
+        reserva_tercera_fase=False,
     )
     return redirect('main_app:index')
+
+
+### Views de procesado de CSVs y sorteo
 
 def procesar_participantes_csv(request):
     if CSVParticipantes.objects.all().count() == 0:
@@ -67,4 +76,8 @@ def realizar_sorteo(request):
     sorteo = crear_sorteo()
     for millar in sorteo.millares:
         millar.primera_fase()
+    for millar in sorteo.millares:
+        millar.segunda_fase()
+    for millar in sorteo.millares:
+        millar.tercera_fase()
     return redirect('main_app:index')

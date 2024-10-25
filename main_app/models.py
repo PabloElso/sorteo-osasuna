@@ -21,6 +21,8 @@ class Participante(models.Model):
     ganador = models.BooleanField(null=True, blank=True)
     ganador_primera_fase = models.BooleanField(null=True, blank=True)
     ganador_segunda_fase = models.BooleanField(null=True, blank=True)
+    ganador_tercera_fase = models.BooleanField(null=True, blank=True)
+    reserva_tercera_fase = models.BooleanField(default=False, blank=True)
 
     class Meta:
         verbose_name = 'Participante'
@@ -51,19 +53,41 @@ class Millar:
     def valido_para_primera_fase(self):
         return self.cuenta_participantes > 33
     
+    @property
+    def valido_para_segunda_fase(self):
+        return self.cuenta_participantes == 33
+    
+    @property
+    def valido_para_tercera_fase(self):
+        return self.cuenta_participantes < 33
+    
     def primera_fase(self):
         if not self.valido_para_primera_fase:
-            self.participantes_segunda_fase = self.participantes
-            self.primera_fase_finalizada = True
             return
-        sorteo_aleatorio_primera_fase(self.participantes)        
-        self.participantes_segunda_fase = self.participantes.exclude(ganador_primera_fase=True)
-        print(self.participantes_segunda_fase)
-        self.primera_fase_finalizada = True
+        sorteo_aleatorio(self.participantes, 33)
+        self.participantes.filter(ganador=True).update(ganador_primera_fase=True)
+        self.participantes.exclude(ganador=True).update(reserva_tercera_fase=True)
 
     def segunda_fase(self):
-        # TO DO: Segunda fase del sorteo: 
-        pass
+        if not self.valido_para_segunda_fase:
+            return
+        self.participantes.update(ganador=True, ganador_segunda_fase=True)
+    
+    def tercera_fase(self):
+        if not self.valido_para_tercera_fase:
+            return
+        self.participantes.update(ganador=True, ganador_tercera_fase=True)
+        participantes_de_reserva = Participante.objects.filter(reserva_tercera_fase=True).order_by('numero_socio')
+        numero_participantes_reserva = participantes_de_reserva.count()
+        puestos_vacantes = 33 - self.cuenta_participantes
+        print(f'Puestos vacantes: {puestos_vacantes} - Número de participantes en reserva: {numero_participantes_reserva}')
+        if participantes_de_reserva.exists():
+            sorteo_aleatorio(participantes_de_reserva, puestos_vacantes)
+            # Se eliminan los ganadores de la reserva
+            participantes_de_reserva.filter(reserva_tercera_fase=True, ganador=True).update(reserva_tercera_fase=False, ganador_tercera_fase=True)
+
+        
+        
 
 
 class Sorteo:
@@ -87,12 +111,10 @@ class Sorteo:
 
 
 
-def sorteo_aleatorio_primera_fase(queryset):
-    if queryset.count() <= 33:
-        raise ValueError("Debe haber más de 33 participantes en la primera fase del sorteo.")
-    participantes_ganadores_seleccionados = random.sample(list(queryset), 33)
+def sorteo_aleatorio(queryset, numero_ganadores):
+    participantes_ganadores_seleccionados = random.sample(list(queryset), numero_ganadores)
     with transaction.atomic():
         for participante_ganador_seleccionado in participantes_ganadores_seleccionados:
             participante_ganador_seleccionado.ganador = True
-            participante_ganador_seleccionado.ganador_primera_fase = True
             participante_ganador_seleccionado.save()
+        

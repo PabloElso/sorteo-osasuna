@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if total_participantes == 0 %}
-        {% include 'secciones/index_csvs.html' %}
+    {% if sorteo_finalizado %}
+        {% include 'secciones/index_resultado_sorteo.html' %}
     {% else %}
-        {% include 'secciones/index_generar_sorteo.html' %}
+        {% include 'secciones/index_presorteo.html' %}
     {% endif %}
 {% endblock %}
