@@ -12,3 +12,14 @@ def procesar_csv_participantes(csv_participantes):
                 numero_socio=row['Nº Socio'],
                 nombre_y_apellidos=row['Nombre']
             )
+
+
+
+def crear_sorteo():
+    participantes = Participante.objects.all()
+    sorteo = Sorteo(participantes)
+    return sorteo
+
+def realizar_sorteo(sorteo):
+    # TO DO: Implementar la lógica del sorteo
+    pass

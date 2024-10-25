@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CSVParticipantes, Participante, Sorteo
-from .utils import procesar_csv_participantes
+from .utils import procesar_csv_participantes, crear_sorteo
 
 # Create your views here.
 
@@ -23,6 +23,7 @@ def millares(request):
     context = {}
     context['total_participantes'] = Participante.objects.all().count()
     context['participantes'] = Participante.objects.all()
+    context['sorteo'] = crear_sorteo()
     return render(request, 'millares.html', context)
 
 def notas(request):
@@ -37,6 +38,14 @@ def reiniciar_sistema(request):
     CSVParticipantes.objects.all().delete()
     Participante.objects.all().delete()
     messages.success(request, 'Sistema reiniciado con éxito.')
+    return redirect('main_app:index')
+
+def resetear_ganadores(request):
+    Participante.objects.update(
+        ganador=None,
+        ganador_primera_fase=None,
+        ganador_segunda_fase=None
+    )
     return redirect('main_app:index')
 
 def procesar_participantes_csv(request):
@@ -54,5 +63,8 @@ def procesar_participantes_csv(request):
     return redirect('main_app:index')
 
 def realizar_sorteo(request):
-    # TO DO: Implementar la lógica del sorteo
+    # TO DO: Está en proceso de implementación, WIP WIP WIP
+    sorteo = crear_sorteo()
+    for millar in sorteo.millares:
+        millar.primera_fase()
     return redirect('main_app:index')

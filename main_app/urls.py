@@ -11,6 +11,7 @@ urlpatterns = [
     path('notas/', views.notas, name='notas'),
     path('herramientas/', views.herramientas, name='herramientas'),
     path('reiniciar_sistema/', views.reiniciar_sistema, name='reiniciar_sistema'),
+    path('resetear_ganadores/', views.resetear_ganadores, name='resetear_ganadores'),
     path('realizar_sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
     # Add other app-specific URLs here
 ]
