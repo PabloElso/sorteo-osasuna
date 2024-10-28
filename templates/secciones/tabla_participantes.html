@@ -2,7 +2,7 @@
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
-                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <tr class="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
                     {% if not_millar %}
                     {% else %}
                         <th class="py-3 px-6 text-left">Millar</th>
@@ -15,11 +15,12 @@
                     <th class="py-3 px-6 text-left">1ª</th>
                     <th class="py-3 px-6 text-left">2ª</th>
                     <th class="py-3 px-6 text-left">3ª</th>
+                    <th class="py-3 px-6 text-left">Fase ganada</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 {% for participante in participantes %}
-                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                <tr class="border-b border-gray-200 {% if participante.ganador_primera_fase %}bg-red-100 hover:bg-red-200{% elif participante.ganador_segunda_fase %}bg-yellow-100 hover:bg-yellow-200{% elif participante.ganador_tercera_fase %}bg-blue-100 hover:bg-blue-200{% else %}bg-gray-100 hover:bg-gray-200{% endif %}">
                     {% if not_millar %}
                     {% else %}
                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ participante.millar }}</td>
@@ -72,6 +73,7 @@
                             No
                         {% endif %}
                     </td>
+                    <td class="py-3 px-6 text-left">{{ participante.fase_ganada }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

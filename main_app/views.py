@@ -1,8 +1,14 @@
+import os
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
+from django.conf import settings
 from .models import CSVParticipantes, Participante, Sorteo
 from .utils import procesar_csv_participantes, crear_sorteo
 
+
+CSV_SORTEO = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo', 'resultado_sorteo.csv')
 
 ### Views base
 
@@ -12,6 +18,7 @@ def index(request):
     context['total_participantes'] = Participante.objects.all().count()
     context['participantes'] = Participante.objects.all()
     context['sorteo_finalizado'] = Participante.objects.filter(ganador=True).count() > 0
+    context['existe_csv_sorteo'] = os.path.exists(CSV_SORTEO)
     return render(request, 'index.html', context)
 
 def participantes(request):
@@ -27,12 +34,23 @@ def millares(request):
     context['sorteo'] = crear_sorteo()
     return render(request, 'millares.html', context)
 
+def subir_csv(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        try:
+            csv_file = request.FILES['csv_file']
+            csv_creado = CSVParticipantes(csv_file=csv_file)
+            csv_creado.save()
+            messages.success(request, 'CSV subido con éxito.')
+        except:
+            messages.error(request, 'Error al subir el CSV.')
+    return redirect('main_app:index')
+
 
 ### Views secundarias: para desarrollo y pruebas principalmente
 
-def notas(request):
+def ayuda(request):
     context = {}
-    return render(request, 'notas.html', context)
+    return render(request, 'ayuda.html', context)
 
 def herramientas(request):
     context = {}
@@ -41,6 +59,14 @@ def herramientas(request):
 def reiniciar_sistema(request):
     CSVParticipantes.objects.all().delete()
     Participante.objects.all().delete()
+    if os.path.exists(CSV_SORTEO):
+        os.remove(CSV_SORTEO)
+    CSV_INPUT_FOLDER = os.path.join(settings.MEDIA_ROOT, 'csvs')
+    if os.path.exists(CSV_INPUT_FOLDER):
+        for filename in os.listdir(CSV_INPUT_FOLDER):
+            file_path = os.path.join(CSV_INPUT_FOLDER, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
     messages.success(request, 'Sistema reiniciado con éxito.')
     return redirect('main_app:index')
 
@@ -52,6 +78,8 @@ def resetear_ganadores(request):
         ganador_tercera_fase=None,
         reserva_tercera_fase=False,
     )
+    if os.path.exists(CSV_SORTEO):
+        os.remove(CSV_SORTEO)
     return redirect('main_app:index')
 
 
@@ -80,4 +108,18 @@ def realizar_sorteo(request):
         millar.segunda_fase()
     for millar in sorteo.millares:
         millar.tercera_fase()
+    # Marcar finalmente aquellos que no han ganado como no ganadores.
+    Participante.objects.exclude(ganador=True).update(ganador=False)
+    # Guardado del resultado del sorteo en CSV
+    sorteo.guardar_resultado_csv()
     return redirect('main_app:index')
+
+def descargar_csv_sorteo(request):
+    if os.path.exists(CSV_SORTEO):
+        with open(CSV_SORTEO, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename={os.path.basename(CSV_SORTEO)}'
+            return response
+    else:
+        messages.warning(request, 'No hay ningún CSV de sorteo para descargar.')
+        return redirect('main_app:index')

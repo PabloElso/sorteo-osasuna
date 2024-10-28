@@ -5,9 +5,17 @@
                 <p class="text-red-500 text-lg font-semibold">No hay CSV</p>
                 <p class="text-gray-600 mt-2">No se ha encontrado ningún archivo CSV. Por favor, suba un archivo CSV para continuar.</p>
                 <div class="mt-4 flex justify-center">
-                    <a href="{% url 'admin:main_app_csvparticipantes_add' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Subir CSV
-                    </a>
+                    <form id="csvForm" action="{% url 'main_app:subir_csv' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input id="csvFileInput" type="file" name="csv_file" class="hidden" required>
+                        <button type="button" id="customButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Seleccionar CSV
+                        </button>
+                        <button type="button" id="customSubmitButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            Subir CSV
+                        </button>
+                        <button type="submit" class="hidden">Submit</button>
+                    </form>
                 </div>
             {% elif total_csvs == 1 %}
                 <p class="text-green-500 text-lg font-semibold">Hay 1 CSV</p>
@@ -30,3 +38,12 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('customButton').addEventListener('click', function() {
+        document.getElementById('csvFileInput').click();
+    });
+
+    document.getElementById('customSubmitButton').addEventListener('click', function() {
+        document.getElementById('csvForm').submit();
+    });
+</script>

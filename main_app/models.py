@@ -1,4 +1,7 @@
 import random
+import csv
+import os
+from django.conf import settings
 from django.db import models, transaction
 
 # Create your models here.
@@ -23,6 +26,17 @@ class Participante(models.Model):
     ganador_segunda_fase = models.BooleanField(null=True, blank=True)
     ganador_tercera_fase = models.BooleanField(null=True, blank=True)
     reserva_tercera_fase = models.BooleanField(default=False, blank=True)
+
+    @property
+    def fase_ganada(self):
+        if self.ganador_tercera_fase:
+            return 3
+        elif self.ganador_segunda_fase:
+            return 2
+        elif self.ganador_primera_fase:
+            return 1
+        else:
+            return 0
 
     class Meta:
         verbose_name = 'Participante'
@@ -61,20 +75,68 @@ class Millar:
     def valido_para_tercera_fase(self):
         return self.cuenta_participantes < 33
     
+    @property
+    def participantes_ganadores(self):
+        return self.participantes.filter(ganador=True)
+    
+    @property
+    def cuenta_participantes_ganadores(self):
+        return self.participantes_ganadores.count()
+    
+    @property
+    def participantes_ganadores_primera_fase(self):
+        return self.participantes_ganadores.filter(ganador_primera_fase=True)
+    
+    @property
+    def participantes_ganadores_segunda_fase(self):
+        return self.participantes_ganadores.filter(ganador_segunda_fase=True)
+    
+    @property
+    def participantes_ganadores_tercera_fase(self):
+        return self.participantes_ganadores.filter(ganador_tercera_fase=True)
+    
+    @property
+    def cuenta_participantes_ganadores_primera_fase(self):
+        return self.participantes_ganadores_primera_fase.count()
+    
+    @property
+    def cuenta_participantes_ganadores_segunda_fase(self):
+        return self.participantes_ganadores_segunda_fase.count()
+    
+    @property
+    def cuenta_participantes_ganadores_tercera_fase(self):
+        return self.participantes_ganadores_tercera_fase.count()
+    
+    @property
+    def participantes_reserva(self):
+        return self.participantes.filter(reserva_tercera_fase=True).order_by('numero_socio')
+    
+    @property
+    def participantes_no_ganadores(self):
+        return self.participantes.exclude(ganador=True)
+    
+    @property
+    def cuenta_participantes_no_ganadores(self):
+        return self.participantes_no_ganadores.count()
+
     def primera_fase(self):
         if not self.valido_para_primera_fase:
+            self.participantes.update(ganador_primera_fase=False)
             return
         sorteo_aleatorio(self.participantes, 33)
         self.participantes.filter(ganador=True).update(ganador_primera_fase=True)
-        self.participantes.exclude(ganador=True).update(reserva_tercera_fase=True)
+        self.participantes.exclude(ganador=True).update(reserva_tercera_fase=True, ganador_primera_fase=False)
 
     def segunda_fase(self):
         if not self.valido_para_segunda_fase:
+            self.participantes.update(ganador_segunda_fase=False)
             return
         self.participantes.update(ganador=True, ganador_segunda_fase=True)
+        self.participantes.exclude(ganador=True).update(ganador_segunda_fase=False)
     
     def tercera_fase(self):
         if not self.valido_para_tercera_fase:
+            self.participantes.update(ganador_tercera_fase=False)
             return
         self.participantes.update(ganador=True, ganador_tercera_fase=True)
         participantes_de_reserva = Participante.objects.filter(reserva_tercera_fase=True).order_by('numero_socio')
@@ -104,12 +166,38 @@ class Sorteo:
             millar = Millar(codigo_millar, participantes)
             millares.append(millar)
         self.millares = millares
+    
+    def guardar_resultado_csv(self):
+        subfolder_path = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')
+        if not os.path.exists(subfolder_path):
+            os.makedirs(subfolder_path)
+        file_path = os.path.join(subfolder_path, 'resultado_sorteo.csv')
+        with open(file_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                'millar', 'posicion_millar', 'numero_socio', 'nombre_y_apellidos',
+                'ganador', 'ganador_primera_fase', 'ganador_segunda_fase',
+                'ganador_tercera_fase', 'reserva_tercera_fase', 'fase_ganada'
+            ])
+            for participante in self.participantes:
+                writer.writerow([
+                    participante.millar,
+                    participante.posicion_millar,
+                    participante.numero_socio,
+                    participante.nombre_y_apellidos,
+                    participante.ganador,
+                    participante.ganador_primera_fase,
+                    participante.ganador_segunda_fase,
+                    participante.ganador_tercera_fase,
+                    participante.reserva_tercera_fase,
+                    participante.fase_ganada
+                ])
 
 
 
 
 
-
+### Definición de función de sorteo aleatorio
 
 def sorteo_aleatorio(queryset, numero_ganadores):
     participantes_ganadores_seleccionados = random.sample(list(queryset), numero_ganadores)
