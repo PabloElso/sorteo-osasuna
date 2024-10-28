@@ -15,4 +15,5 @@ urlpatterns = [
     path('resetear_ganadores/', views.resetear_ganadores, name='resetear_ganadores'),
     path('realizar_sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
     path('descargar_csv_sorteo/', views.descargar_csv_sorteo, name='descargar_csv_sorteo'),
+    path('descargar_pdf_sorteo/', views.descargar_pdf_sorteo, name='descargar_pdf_sorteo'),
 ]

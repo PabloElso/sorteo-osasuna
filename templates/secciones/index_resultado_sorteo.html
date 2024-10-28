@@ -2,7 +2,10 @@
     <div class="bg-white shadow-lg rounded-lg p-8 max-w-lg text-center">
         <h1 class="text-4xl font-bold text-green-600 mb-4">Sorteo completado</h1>
         <a href="{% url 'main_app:descargar_csv_sorteo' %}" class="inline-block bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
-            Descargar archivo
+            Descargar CSV
+        </a>
+        <a href="{% url 'main_app:descargar_pdf_sorteo' %}" class="inline-block bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700">
+            Descargar PDF
         </a>
     </div>
 </div>

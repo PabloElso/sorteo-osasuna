@@ -9,6 +9,7 @@ from .utils import procesar_csv_participantes, crear_sorteo
 
 
 CSV_SORTEO = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo', 'resultado_sorteo.csv')
+PDF_SORTEO = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo', 'resultado_sorteo.pdf')
 
 ### Views base
 
@@ -34,17 +35,6 @@ def millares(request):
     context['sorteo'] = crear_sorteo()
     return render(request, 'millares.html', context)
 
-def subir_csv(request):
-    if request.method == 'POST' and request.FILES['csv_file']:
-        try:
-            csv_file = request.FILES['csv_file']
-            csv_creado = CSVParticipantes(csv_file=csv_file)
-            csv_creado.save()
-            messages.success(request, 'CSV subido con éxito.')
-        except:
-            messages.error(request, 'Error al subir el CSV.')
-    return redirect('main_app:index')
-
 
 ### Views secundarias: para desarrollo y pruebas principalmente
 
@@ -61,6 +51,8 @@ def reiniciar_sistema(request):
     Participante.objects.all().delete()
     if os.path.exists(CSV_SORTEO):
         os.remove(CSV_SORTEO)
+    if os.path.exists(PDF_SORTEO):
+        os.remove(PDF_SORTEO)
     CSV_INPUT_FOLDER = os.path.join(settings.MEDIA_ROOT, 'csvs')
     if os.path.exists(CSV_INPUT_FOLDER):
         for filename in os.listdir(CSV_INPUT_FOLDER):
@@ -80,10 +72,23 @@ def resetear_ganadores(request):
     )
     if os.path.exists(CSV_SORTEO):
         os.remove(CSV_SORTEO)
+    if os.path.exists(PDF_SORTEO):
+        os.remove(PDF_SORTEO)
     return redirect('main_app:index')
 
 
 ### Views de procesado de CSVs y sorteo
+
+def subir_csv(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        try:
+            csv_file = request.FILES['csv_file']
+            csv_creado = CSVParticipantes(csv_file=csv_file)
+            csv_creado.save()
+            messages.success(request, 'CSV subido con éxito.')
+        except:
+            messages.error(request, 'Error al subir el CSV.')
+    return redirect('main_app:index')
 
 def procesar_participantes_csv(request):
     if CSVParticipantes.objects.all().count() == 0:
@@ -96,11 +101,14 @@ def procesar_participantes_csv(request):
         messages.warning(request, 'Ya hay participantes en la base de datos. Borra todos los participantes si quieres procesar un nuevo CSV.')
         return redirect('main_app:index')
     csv_participantes = CSVParticipantes.objects.first()
-    procesar_csv_participantes(csv_participantes)
+    try:
+        procesar_csv_participantes(csv_participantes)
+        messages.success(request, 'CSV de participantes procesado con éxito.')
+    except Exception as e:
+        messages.error(request, f'Error al procesar el CSV de participantes: {e}')
     return redirect('main_app:index')
 
 def realizar_sorteo(request):
-    # TO DO: Está en proceso de implementación, WIP WIP WIP
     sorteo = crear_sorteo()
     for millar in sorteo.millares:
         millar.primera_fase()
@@ -112,6 +120,9 @@ def realizar_sorteo(request):
     Participante.objects.exclude(ganador=True).update(ganador=False)
     # Guardado del resultado del sorteo en CSV
     sorteo.guardar_resultado_csv()
+    # Guardado del resultado del sorteo en PDF
+    sorteo.guardar_resultado_pdf()
+    messages.success(request, 'Sorteo realizado con éxito.')
     return redirect('main_app:index')
 
 def descargar_csv_sorteo(request):
@@ -122,4 +133,14 @@ def descargar_csv_sorteo(request):
             return response
     else:
         messages.warning(request, 'No hay ningún CSV de sorteo para descargar.')
+        return redirect('main_app:index')
+
+def descargar_pdf_sorteo(request):
+    if os.path.exists(PDF_SORTEO):
+        with open(PDF_SORTEO, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename={os.path.basename(PDF_SORTEO)}'
+            return response
+    else:
+        messages.warning(request, 'No hay ningún PDF de sorteo para descargar.')
         return redirect('main_app:index')

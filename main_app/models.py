@@ -192,8 +192,57 @@ class Sorteo:
                     participante.reserva_tercera_fase,
                     participante.fase_ganada
                 ])
+    
+    def guardar_resultado_pdf(self):
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib import colors
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+        from reportlab.lib.units import inch
+        import os
+        from django.conf import settings
 
-
+        subfolder_path = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')
+        if not os.path.exists(subfolder_path):
+            os.makedirs(subfolder_path)
+        file_path = os.path.join(subfolder_path, 'resultado_sorteo.pdf')
+        doc = SimpleDocTemplate(file_path, pagesize=letter,
+                                rightMargin=inch, leftMargin=inch,
+                                topMargin=inch, bottomMargin=inch)
+        elements = []
+        styles = getSampleStyleSheet()
+        title = Paragraph("Resultados del Sorteo", styles['Title'])
+        intro_text = Paragraph("A continuación se presentan los resultados del sorteo:", styles['BodyText'])
+        elements.append(title)
+        elements.append(intro_text)
+        data = [['Millar', 'Posición Millar', 'Número Socio', 'Nombre y Apellidos', 'Ganador', 'Fase Ganada']]
+        for participante in self.participantes:
+            nombre_y_apellidos = Paragraph(participante.nombre_y_apellidos, styles['BodyText'])
+            data.append([
+                participante.millar,
+                participante.posicion_millar,
+                participante.numero_socio,
+                nombre_y_apellidos,
+                "Sí" if participante.ganador else "No",
+                participante.fase_ganada
+            ])
+        col_widths = [0.5*inch, 1*inch, 1*inch, 1.5*inch, 0.75*inch, 1*inch]
+        table = Table(data, colWidths=col_widths)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.lightblue, colors.lightcoral]),
+            ('WORDWRAP', (0, 0), (-1, 0), 'CJK'),
+        ]))
+        elements.append(table)
+        doc.build(elements)
 
 
 
