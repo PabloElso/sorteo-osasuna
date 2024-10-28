@@ -9,6 +9,7 @@ module.exports = {
       colors: {
         rojoosasuna: '#ff001a',
         azulosasuna: '#002457',
+        amarilloosasuna: '#d4a500',
       },
     },
   },

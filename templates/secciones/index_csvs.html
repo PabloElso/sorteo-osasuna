@@ -1,4 +1,4 @@
-<div class="flex items-center justify-center bg-gray-100">
+<div class="flex items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <div class="text-center">
             {% if total_csvs == 0 %}
@@ -7,6 +7,7 @@
                 <div class="mt-4 flex justify-center">
                     <form id="csvForm" action="{% url 'main_app:subir_csv' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        <p id="fileName" class="m-2 text-gray-700 font-bold text-lg"></p>
                         <input id="csvFileInput" type="file" name="csv_file" class="hidden" required>
                         <button type="button" id="customButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Seleccionar CSV
@@ -45,5 +46,10 @@
 
     document.getElementById('customSubmitButton').addEventListener('click', function() {
         document.getElementById('csvForm').submit();
+    });
+
+    document.getElementById('csvFileInput').addEventListener('change', function() {
+        var fileName = document.getElementById('csvFileInput').files[0].name;
+        document.getElementById('fileName').textContent = fileName;
     });
 </script>
