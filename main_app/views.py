@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.conf import settings
+from django.db import transaction
 from .models import CSVParticipantes, Participante, Sorteo
 from .utils import procesar_csv_participantes, crear_sorteo
 
@@ -110,14 +111,17 @@ def procesar_participantes_csv(request):
 
 def realizar_sorteo(request):
     sorteo = crear_sorteo()
-    for millar in sorteo.millares:
-        millar.primera_fase()
-    for millar in sorteo.millares:
-        millar.segunda_fase()
-    for millar in sorteo.millares:
-        millar.tercera_fase()
-    # Marcar finalmente aquellos que no han ganado como no ganadores.
-    Participante.objects.exclude(ganador=True).update(ganador=False)
+    with transaction.atomic():
+        for millar in sorteo.millares:
+            millar.primera_fase()
+        for millar in sorteo.millares:
+            millar.segunda_fase()
+        for millar in sorteo.millares:
+            millar.tercera_fase()
+        # Marcar finalmente aquellos que no han ganado como no ganadores.
+        Participante.objects.exclude(ganador=True).update(ganador=False)
+    #Checks:
+    print('Combinación erronea:', Participante.objects.filter(ganador=True, ganador_primera_fase=False, ganador_segunda_fase=False, ganador_tercera_fase=False).count())
     # Guardado del resultado del sorteo en CSV
     sorteo.guardar_resultado_csv()
     # Guardado del resultado del sorteo en PDF

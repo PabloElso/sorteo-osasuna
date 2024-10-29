@@ -16,6 +16,8 @@
                             Subir CSV
                         </button>
                         <button type="submit" class="hidden">Submit</button>
+                        <p id="errorMessage" class="mt-4 text-red-500 font-bold hidden">Selecciona un archivo.</p>
+
                     </form>
                 </div>
             {% elif total_csvs == 1 %}
@@ -45,7 +47,14 @@
     });
 
     document.getElementById('customSubmitButton').addEventListener('click', function() {
-        document.getElementById('csvForm').submit();
+        const fileInput = document.getElementById('csvFileInput');
+        const errorMessage = document.getElementById('errorMessage');
+        if (!fileInput.files.length) {
+            errorMessage.classList.remove('hidden');
+        } else {
+            errorMessage.classList.add('hidden');
+            document.querySelector('form').submit();
+        }
     });
 
     document.getElementById('csvFileInput').addEventListener('change', function() {

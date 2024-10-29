@@ -2,7 +2,7 @@ import random
 import csv
 import os
 from django.conf import settings
-from django.db import models, transaction
+from django.db import models
 
 # Create your models here.
 
@@ -46,12 +46,8 @@ class Participante(models.Model):
 
 class Millar:
 
-    def __init__(self, codigo, participantes):
+    def __init__(self, codigo):
         self.codigo = codigo
-        self.participantes = participantes
-        self.primera_fase_finalizada = False
-        self_segunda_fase_finalizada = False
-        self.finalizado = False
     
     def __str__(self):
         return f'Millar {self.codigo}'
@@ -59,6 +55,10 @@ class Millar:
     def __repr__(self):
         return self.__str__()
     
+    @property
+    def participantes(self):
+        return Participante.objects.filter(millar=self.codigo)
+
     @property
     def cuenta_participantes(self):
         return self.participantes.count()
@@ -106,11 +106,7 @@ class Millar:
     @property
     def cuenta_participantes_ganadores_tercera_fase(self):
         return self.participantes_ganadores_tercera_fase.count()
-    
-    @property
-    def participantes_reserva(self):
-        return self.participantes.filter(reserva_tercera_fase=True).order_by('numero_socio')
-    
+        
     @property
     def participantes_no_ganadores(self):
         return self.participantes.exclude(ganador=True)
@@ -123,8 +119,8 @@ class Millar:
         if not self.valido_para_primera_fase:
             self.participantes.update(ganador_primera_fase=False)
             return
-        sorteo_aleatorio(self.participantes, 33)
-        self.participantes.filter(ganador=True).update(ganador_primera_fase=True)
+        ganadores = sorteo_aleatorio(self.participantes, 33)
+        ganadores.update(ganador=True, ganador_primera_fase=True)
         self.participantes.exclude(ganador=True).update(reserva_tercera_fase=True, ganador_primera_fase=False)
 
     def segunda_fase(self):
@@ -136,19 +132,24 @@ class Millar:
     
     def tercera_fase(self):
         if not self.valido_para_tercera_fase:
-            self.participantes.update(ganador_tercera_fase=False)
+            self.participantes.exclude(ganador_tercera_fase=True).update(ganador_tercera_fase=False)
             return
         self.participantes.update(ganador=True, ganador_tercera_fase=True)
         participantes_de_reserva = Participante.objects.filter(reserva_tercera_fase=True).order_by('numero_socio')
         numero_participantes_reserva = participantes_de_reserva.count()
         puestos_vacantes = 33 - self.cuenta_participantes
-        print(f'Puestos vacantes: {puestos_vacantes} - Número de participantes en reserva: {numero_participantes_reserva}')
+        # print(f'Puestos vacantes: {puestos_vacantes} - Número de participantes en reserva: {numero_participantes_reserva}')
         if participantes_de_reserva.exists():
-            sorteo_aleatorio(participantes_de_reserva, puestos_vacantes)
-            # Se eliminan los ganadores de la reserva
-            participantes_de_reserva.filter(reserva_tercera_fase=True, ganador=True).update(reserva_tercera_fase=False, ganador_tercera_fase=True)
+            ganadores = sorteo_aleatorio(participantes_de_reserva, puestos_vacantes)
+            ganadores.update(ganador=True, reserva_tercera_fase=False, ganador_tercera_fase=True)
 
-        
+
+### Definición de función de sorteo aleatorio
+
+def sorteo_aleatorio(queryset, numero_ganadores):
+    pks = list(queryset.values_list('pk', flat=True))
+    selected_pks = random.sample(pks, numero_ganadores)
+    return queryset.filter(pk__in=selected_pks)        
         
 
 
@@ -162,8 +163,7 @@ class Sorteo:
         millares = []
         listado_codigos_millar = Participante.objects.all().order_by('millar').values_list('millar', flat=True).distinct()
         for codigo_millar in listado_codigos_millar:
-            participantes = Participante.objects.filter(millar=codigo_millar)
-            millar = Millar(codigo_millar, participantes)
+            millar = Millar(codigo_millar)
             millares.append(millar)
         self.millares = millares
     
@@ -245,13 +245,3 @@ class Sorteo:
         doc.build(elements)
 
 
-
-### Definición de función de sorteo aleatorio
-
-def sorteo_aleatorio(queryset, numero_ganadores):
-    participantes_ganadores_seleccionados = random.sample(list(queryset), numero_ganadores)
-    with transaction.atomic():
-        for participante_ganador_seleccionado in participantes_ganadores_seleccionados:
-            participante_ganador_seleccionado.ganador = True
-            participante_ganador_seleccionado.save()
-        

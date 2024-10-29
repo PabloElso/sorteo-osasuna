@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if total_participantes == 0 %}
-        {% include 'secciones/aviso.html' with titulo='No hay participantes' texto='Para generar los participantes del sorteo, sube el archivo CSV en formato adecuado desde la pantalla de inicio. Después, procésalo siguiendo las instruciones y podrás ver los participantes en esta sección.' %}
+        {% include 'secciones/aviso.html' with titulo='No hay participantes' texto='Para generar los participantes del sorteo, sube el archivo CSV en formato adecuado desde la pantalla de inicio. Después, procésalo siguiendo las instrucciones y podrás ver los participantes en esta sección.' %}
     {% else %}
         {% include 'secciones/tabla_participantes.html' %}
     {% endif %}
