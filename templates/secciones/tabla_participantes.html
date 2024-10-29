@@ -1,43 +1,97 @@
 <div class="container mx-auto py-8">
     <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-400">
+        <table class="min-w-full bg-white border border-blue-500">
             <thead>
-                <tr class="bg-gray-400 text-gray-800 uppercase text-sm leading-normal">
-                    {% if not_millar %}
-                    {% else %}
-                        <th class="py-3 px-6 text-left">Millar</th>
-                    {% endif %}
-                    <th class="py-3 px-6 text-left">Posición Millar</th>
-                    <th class="py-3 px-6 text-left">Nº Socio</th>
-                    <th class="py-3 px-6 text-left">Nombre y Apellidos</th>
-                    <th class="py-3 px-6 text-left">Ganador</th>
-                    <th class="py-3 px-6 text-left">Reserva</th>
-                    <th class="py-3 px-6 text-left">1ª</th>
-                    <th class="py-3 px-6 text-left">2ª</th>
-                    <th class="py-3 px-6 text-left">3ª</th>
-                    <th class="py-3 px-6 text-left">Fase ganada</th>
+                <tr class="bg-blue-500 text-white uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left {% if not_millar %}hidden{% endif %}" data-column="millar">
+                        Millar
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="posicion_millar">
+                        Posición Millar
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="numero_socio">
+                        Nº Socio
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="nombre_y_apellidos">
+                        Nombre y Apellidos
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="ganador">
+                        Ganador
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="reserva_tercera_fase">
+                        Reserva
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="ganador_primera_fase">
+                        1ª
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="ganador_segunda_fase">
+                        2ª
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="ganador_tercera_fase">
+                        3ª
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
+                    <th class="py-3 px-6 text-left" data-column="fase_ganada">
+                        Fase ganada
+                        <span class="sort-icons">
+                            <span class="sort-asc cursor-pointer">&#9650;</span>
+                            <span class="sort-desc cursor-pointer">&#9660;</span>
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 {% for participante in participantes %}
-                <tr class="border-b border-gray-400 {% if participante.ganador_primera_fase %}bg-red-100 hover:bg-red-200{% elif participante.ganador_segunda_fase %}bg-yellow-100 hover:bg-yellow-200{% elif participante.ganador_tercera_fase %}bg-blue-100 hover:bg-blue-200{% else %}bg-gray-100 hover:bg-gray-200{% endif %}">
-                    {% if not_millar %}
-                    {% else %}
-                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ participante.millar }}</td>
-                    {% endif %}
-                    <td class="py-3 px-6 text-left">{{ participante.posicion_millar }}</td>
-                    <td class="py-3 px-6 text-left">{{ participante.numero_socio }}</td>
-                    <td class="py-3 px-6 text-left">{{ participante.nombre_y_apellidos }}</td>
-                    <td class="py-3 px-6 text-left">
+                <tr class="border-b border-blue-500 {% if participante.ganador %}bg-red-100 hover:bg-red-200{% else %}bg-gray-100 hover:bg-gray-200{% endif %}">
+                    <td class="py-3 px-6 text-left whitespace-nowrap {% if not_millar %}hidden{% endif %}" data-column="millar">{{ participante.millar }}</td>
+                    <td class="py-3 px-6 text-left" data-column="posicion_millar">{{ participante.posicion_millar }}</td>
+                    <td class="py-3 px-6 text-left" data-column="numero_socio">{{ participante.numero_socio }}</td>
+                    <td class="py-3 px-6 text-left" data-column="nombre_y_apellidos">{{ participante.nombre_y_apellidos }}</td>
+                    <td class="py-3 px-6 text-left" data-column="ganador">
                         {% if participante.ganador is None %}
                             No se ha sorteado
                         {% elif participante.ganador %}
-                            Sí
+                            <span class="text-red-600 font-bold">Sí</span>
                         {% else %}
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left">
+                    <td class="py-3 px-6 text-left" data-column="reserva_tercera_fase">
                         {% if participante.reserva_tercera_fase is None %}
                             No se ha sorteado
                         {% elif participante.reserva_tercera_fase %}
@@ -46,7 +100,7 @@
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left">
+                    <td class="py-3 px-6 text-left" data-column="ganador_primera_fase">
                         {% if participante.ganador_primera_fase is None %}
                             No se ha sorteado
                         {% elif participante.ganador_primera_fase %}
@@ -55,7 +109,7 @@
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left">
+                    <td class="py-3 px-6 text-left" data-column="ganador_segunda_fase">
                         {% if participante.ganador_segunda_fase is None %}
                             No se ha sorteado
                         {% elif participante.ganador_segunda_fase %}
@@ -64,7 +118,7 @@
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left">
+                    <td class="py-3 px-6 text-left" data-column="ganador_tercera_fase">
                         {% if participante.ganador_tercera_fase is None %}
                             No se ha sorteado
                         {% elif participante.ganador_tercera_fase %}
@@ -73,10 +127,49 @@
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left">{{ participante.fase_ganada }}</td>
+                    <td class="py-3 px-6 text-left" data-column="fase_ganada">
+                        <span class="text-blue-600 font-bold text-lg">{{ participante.fase_ganada }}</span>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.sort-asc, .sort-desc').forEach(function(icon) {
+        icon.addEventListener('click', function() {
+            var th = icon.closest('th');
+            var table = th.closest('table');
+            var column = th.getAttribute('data-column');
+            var order = icon.classList.contains('sort-asc') ? 'asc' : 'desc';
+            sortTable(table, column, order);
+        });
+    });
+
+    function sortTable(table, column, order) {
+        var tbody = table.querySelector('tbody');
+        var rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort(function(a, b) {
+            var aText = a.querySelector('td[data-column="' + column + '"]').textContent.trim();
+            var bText = b.querySelector('td[data-column="' + column + '"]').textContent.trim();
+
+            if (!isNaN(aText) && !isNaN(bText)) {
+                aText = parseFloat(aText);
+                bText = parseFloat(bText);
+            }
+
+            if (order === 'asc') {
+                return aText > bText ? 1 : -1;
+            } else {
+                return aText < bText ? 1 : -1;
+            }
+        });
+
+        rows.forEach(function(row) {
+            tbody.appendChild(row);
+        });
+    }
+</script>
