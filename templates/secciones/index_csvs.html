@@ -1,4 +1,11 @@
-<div class="flex items-center justify-center">
+<div class="flex flex-col items-center justify-center">
+    {% if total_csvs == 0 %}
+            {% include 'secciones/instrucciones_1.html' %}
+        {% elif total_csvs == 1 %}
+            {% include 'secciones/instrucciones_2.html' %}
+        {% else %}
+            {% include 'secciones/instrucciones_error_varios_csvs.html' %}
+    {% endif %}
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <div class="text-center">
             {% if total_csvs == 0 %}
