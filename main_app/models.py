@@ -3,6 +3,7 @@ import csv
 import os
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 
 # Create your models here.
 
@@ -26,6 +27,7 @@ class Participante(models.Model):
     ganador_segunda_fase = models.BooleanField(null=True, blank=True)
     ganador_tercera_fase = models.BooleanField(null=True, blank=True)
     reserva_tercera_fase = models.BooleanField(default=False, blank=True)
+    millar_ganador = models.IntegerField(null=True, blank=True)
 
     @property
     def fase_ganada(self):
@@ -116,56 +118,75 @@ class Millar:
         return self.participantes_no_ganadores.count()
 
     def primera_fase(self):
+        print(f'Fase 1 del millar {self.codigo}')
         if not self.valido_para_primera_fase:
             self.participantes.update(ganador_primera_fase=False)
             return
         ganadores = sorteo_aleatorio(self.participantes, 33)
-        ganadores.update(ganador=True, ganador_primera_fase=True)
+        ganadores.update(ganador=True, ganador_primera_fase=True, millar_ganador=self.codigo)
         self.participantes.exclude(ganador=True).update(reserva_tercera_fase=True, ganador_primera_fase=False)
 
     def segunda_fase(self):
+        print(f'Fase 2 del millar {self.codigo}')
         if not self.valido_para_segunda_fase:
             self.participantes.update(ganador_segunda_fase=False)
             return
-        self.participantes.update(ganador=True, ganador_segunda_fase=True)
+        self.participantes.update(ganador=True, ganador_segunda_fase=True, millar_ganador=self.codigo)
         self.participantes.exclude(ganador=True).update(ganador_segunda_fase=False)
     
     def tercera_fase(self):
+        print(f'Fase 3 del millar {self.codigo}')
         if not self.valido_para_tercera_fase:
             self.participantes.exclude(ganador_tercera_fase=True).update(ganador_tercera_fase=False)
             return
-        self.participantes.update(ganador=True, ganador_tercera_fase=True)
+        self.participantes.update(ganador=True, ganador_tercera_fase=True, millar_ganador=self.codigo)
         participantes_de_reserva = Participante.objects.filter(reserva_tercera_fase=True).order_by('numero_socio')
         numero_participantes_reserva = participantes_de_reserva.count()
         puestos_vacantes = 33 - self.cuenta_participantes
         # print(f'Puestos vacantes: {puestos_vacantes} - Número de participantes en reserva: {numero_participantes_reserva}')
         if participantes_de_reserva.exists():
             ganadores = sorteo_aleatorio(participantes_de_reserva, puestos_vacantes)
-            ganadores.update(ganador=True, reserva_tercera_fase=False, ganador_tercera_fase=True)
+            ganadores.update(ganador=True, reserva_tercera_fase=False, ganador_tercera_fase=True, millar_ganador=self.codigo)
 
 
 ### Definición de función de sorteo aleatorio
 
 def sorteo_aleatorio(queryset, numero_ganadores):
     pks = list(queryset.values_list('pk', flat=True))
+    print(f'Cuantos ganadores tiene que haber: {numero_ganadores} - Cuantos participan: {len(pks)}')
+    if numero_ganadores > len(pks):
+        numero_ganadores = len(pks)
+        print(f'ARREGLO: Ahora el número de ganadores es: {numero_ganadores}')
     selected_pks = random.sample(pks, numero_ganadores)
     return queryset.filter(pk__in=selected_pks)        
         
 
+class Millar_Tras_Sorteo(Millar):
+
+    @property
+    def participantes(self):
+        complex_filter = (Q(millar=self.codigo) & (Q(millar_ganador=self.codigo) | Q(millar_ganador=None))) | Q(millar_ganador=self.codigo)
+        return Participante.objects.filter(complex_filter)
+
 
 class Sorteo:
 
-    def __init__(self, participantes):
+    def __init__(self, participantes, reorganizar_millares=False):
         self.participantes = participantes
-        self.generar_millares()
+        self.generar_millares(reorganizar_millares)
 
-    def generar_millares(self):
+    def generar_millares(self, reorganizar_millares):
+        if reorganizar_millares:
+            MillarClass = Millar_Tras_Sorteo
+        else:
+            MillarClass = Millar
         millares = []
         listado_codigos_millar = Participante.objects.all().order_by('millar').values_list('millar', flat=True).distinct()
         for codigo_millar in listado_codigos_millar:
-            millar = Millar(codigo_millar)
+            millar = MillarClass(codigo_millar)
             millares.append(millar)
         self.millares = millares
+
     
     def guardar_resultado_csv(self):
         subfolder_path = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')
@@ -177,7 +198,7 @@ class Sorteo:
             writer.writerow([
                 'millar', 'posicion_millar', 'numero_socio', 'nombre_y_apellidos',
                 'ganador', 'ganador_primera_fase', 'ganador_segunda_fase',
-                'ganador_tercera_fase', 'reserva_tercera_fase', 'fase_ganada'
+                'ganador_tercera_fase', 'reserva_tercera_fase', 'fase_ganada', 'millar_ganador',
             ])
             for participante in self.participantes:
                 writer.writerow([
@@ -190,7 +211,8 @@ class Sorteo:
                     participante.ganador_segunda_fase,
                     participante.ganador_tercera_fase,
                     participante.reserva_tercera_fase,
-                    participante.fase_ganada
+                    participante.fase_ganada,
+                    participante.millar_ganador,
                 ])
     
     def guardar_resultado_pdf(self):
@@ -215,7 +237,7 @@ class Sorteo:
         intro_text = Paragraph("A continuación se presentan los resultados del sorteo:", styles['BodyText'])
         elements.append(title)
         elements.append(intro_text)
-        data = [['Millar', 'Posición Millar', 'Número Socio', 'Nombre y Apellidos', 'Ganador', 'Fase Ganada']]
+        data = [['Millar', 'Posición Millar', 'Número Socio', 'Nombre y Apellidos', 'Ganador', 'Fase Ganada', 'Millar Ganador']]
         for participante in self.participantes:
             nombre_y_apellidos = Paragraph(participante.nombre_y_apellidos, styles['BodyText'])
             data.append([
@@ -224,7 +246,8 @@ class Sorteo:
                 participante.numero_socio,
                 nombre_y_apellidos,
                 "Sí" if participante.ganador else "No",
-                participante.fase_ganada
+                participante.fase_ganada,
+                participante.millar_ganador,
             ])
         col_widths = [0.5*inch, 1*inch, 1*inch, 1.5*inch, 0.75*inch, 1*inch]
         table = Table(data, colWidths=col_widths)

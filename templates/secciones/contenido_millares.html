@@ -2,11 +2,11 @@
     {% for millar in sorteo.millares %}
         <div class="mb-8 bg-gray-300 shadow-lg rounded-lg p-6">
             <h2 class="text-2xl text-center font-bold mb-4">{{ millar }}</h2>
-            <div class="grid grid-cols-6 gap-2 mb-4">
-                <div class="bg-gray-100 p-2 rounded-lg text-center">
+            <div class="grid grid-cols-5 gap-2 mb-4">
+                <!-- <div class="bg-gray-100 p-2 rounded-lg text-center">
                     <p class="text-sm font-semibold">Participantes</p>
                     <p class="text-lg">{{ millar.cuenta_participantes }}</p>
-                </div>
+                </div> -->
                 <div class="bg-gray-100 p-2 rounded-lg text-center">
                     <p class="text-sm font-semibold">Ganadores totales</p>
                     <p class="text-lg">{{ millar.cuenta_participantes_ganadores }}</p>
@@ -28,7 +28,7 @@
                     <p class="text-lg">{{ millar.cuenta_participantes_no_ganadores }}</p>
                 </div>
             </div>
-            {% include 'secciones/tabla_participantes.html' with participantes=millar.participantes not_millar=True %}
+            {% include 'secciones/tabla_participantes.html' with participantes=millar.participantes %}
         </div>
     {% endfor %}
 </div>

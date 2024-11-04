@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if total_participantes == 0 %}
+        {% include 'secciones/aviso.html' with titulo='No hay participantes' texto='Para ver el resumen de datos de los participantes del sorteo, sube el archivo CSV en formato adecuado desde la pantalla de inicio. Después, procésalo siguiendo las instrucciones y podrás ver el resumen de los datos de los participantes en esta sección.' %}
+    {% else %}
+    <div class="container mx-auto py-8 w-2/3">
+        <div class="flex justify-center">
+            <h1 class="text-3xl rounded bg-gray-400 border border-gray-700 text-center font-bold p-2 mb-6 inline-block">Resumen de Datos</h1>
+        </div>
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">Participantes por Millar</h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for millar in sorteo.millares %}
+                    <li class="text-gray-700 bg-gray-100 p-4 rounded-lg shadow">
+                        <span class="font-bold">Millar {{ forloop.counter }}:</span> {{ millar.cuenta_participantes }} participantes
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+            <h2 class="text-2xl font-semibold mb-4">Total de Participantes</h2>
+            <p class="text-gray-700 text-lg">{{ total_participantes }} participantes</p>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

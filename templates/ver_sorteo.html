@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if sorteo_finalizado %}
+        {% include 'secciones/index_resultado_sorteo.html' %}
+    {% else %}
+        {% if total_participantes == 0 %}
+            {% include 'secciones/aviso.html' with titulo='No hay participantes' texto='Para generar los participantes del sorteo, sube el archivo CSV en formato adecuado desde la pantalla de inicio. Después, procésalo siguiendo las instrucciones y podrás ver los participantes en esta sección.' %}
+        {% else %}
+            {% include 'secciones/index_generar_sorteo.html' %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

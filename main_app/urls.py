@@ -6,6 +6,7 @@ app_name = 'main_app'
 urlpatterns = [
     path('', views.index, name='index'),
     path('subir_csv/', views.subir_csv, name='subir_csv'),
+    path('resumen_de_datos/', views.resumen_de_datos, name='resumen_de_datos'),
     path('procesar_participantes_csv/', views.procesar_participantes_csv, name='procesar_participantes_csv'),
     path('participantes/', views.participantes, name='participantes'),
     path('millares/', views.millares, name='millares'),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('reiniciar_sistema/', views.reiniciar_sistema, name='reiniciar_sistema'),
     path('resetear_ganadores/', views.resetear_ganadores, name='resetear_ganadores'),
     path('realizar_sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
+    path('ver_sorteo/', views.ver_sorteo, name='ver_sorteo'),
     path('descargar_csv_sorteo/', views.descargar_csv_sorteo, name='descargar_csv_sorteo'),
     path('descargar_pdf_sorteo/', views.descargar_pdf_sorteo, name='descargar_pdf_sorteo'),
 ]

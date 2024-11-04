@@ -15,9 +15,9 @@ def procesar_csv_participantes(csv_participantes):
 
 
 
-def crear_sorteo():
+def crear_sorteo(reorganizar_millares=False):
     participantes = Participante.objects.all()
-    sorteo = Sorteo(participantes)
+    sorteo = Sorteo(participantes, reorganizar_millares)
     return sorteo
 
 def realizar_sorteo(sorteo):

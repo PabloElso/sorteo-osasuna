@@ -23,6 +23,12 @@ def index(request):
     context['existe_csv_sorteo'] = os.path.exists(CSV_SORTEO)
     return render(request, 'index.html', context)
 
+def resumen_de_datos(request):
+    context = {}
+    context['sorteo'] = crear_sorteo()
+    context['total_participantes'] = Participante.objects.all().count()
+    return render(request, 'resumen_de_datos.html', context)
+
 def participantes(request):
     context = {}
     context['total_participantes'] = Participante.objects.all().count()
@@ -33,8 +39,14 @@ def millares(request):
     context = {}
     context['total_participantes'] = Participante.objects.all().count()
     context['participantes'] = Participante.objects.all()
-    context['sorteo'] = crear_sorteo()
+    context['sorteo'] = crear_sorteo(reorganizar_millares=True)
     return render(request, 'millares.html', context)
+
+def ver_sorteo(request):
+    context = {}
+    context['sorteo_finalizado'] = Participante.objects.filter(ganador=True).count() > 0
+    context['total_participantes'] = Participante.objects.all().count()
+    return render(request, 'ver_sorteo.html', context)
 
 
 ### Views secundarias: para desarrollo y pruebas principalmente
@@ -70,6 +82,7 @@ def resetear_ganadores(request):
         ganador_segunda_fase=None, 
         ganador_tercera_fase=None,
         reserva_tercera_fase=False,
+        millar_ganador=None,
     )
     if os.path.exists(CSV_SORTEO):
         os.remove(CSV_SORTEO)
@@ -119,7 +132,7 @@ def realizar_sorteo(request):
         for millar in sorteo.millares:
             millar.tercera_fase()
         # Marcar finalmente aquellos que no han ganado como no ganadores.
-        Participante.objects.exclude(ganador=True).update(ganador=False)
+        Participante.objects.exclude(ganador=True).update(ganador=False, millar_ganador=0)
     #Checks:
     print('Combinación erronea:', Participante.objects.filter(ganador=True, ganador_primera_fase=False, ganador_segunda_fase=False, ganador_tercera_fase=False).count())
     # Guardado del resultado del sorteo en CSV
@@ -127,7 +140,7 @@ def realizar_sorteo(request):
     # Guardado del resultado del sorteo en PDF
     sorteo.guardar_resultado_pdf()
     messages.success(request, 'Sorteo realizado con éxito.')
-    return redirect('main_app:index')
+    return redirect('main_app:ver_sorteo')
 
 def descargar_csv_sorteo(request):
     if os.path.exists(CSV_SORTEO):
