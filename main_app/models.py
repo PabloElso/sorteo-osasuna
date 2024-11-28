@@ -1,5 +1,6 @@
 import random
 import csv
+import secrets
 import os
 from django.conf import settings
 from django.db import models
@@ -157,7 +158,9 @@ def sorteo_aleatorio(queryset, numero_ganadores):
     if numero_ganadores > len(pks):
         numero_ganadores = len(pks)
         print(f'ARREGLO: Ahora el número de ganadores es: {numero_ganadores}')
-    selected_pks = random.sample(pks, numero_ganadores)
+    # selected_pks = random.sample(pks, numero_ganadores)
+    print('Generando sorteo aleatorio con la librería secrets')
+    selected_pks = secrets.SystemRandom().sample(pks, numero_ganadores)
     return queryset.filter(pk__in=selected_pks)        
         
 
