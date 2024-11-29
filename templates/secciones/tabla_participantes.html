@@ -32,7 +32,7 @@
                         </span>
                     </th>
                     <th class="py-3 px-6 text-left" data-column="ganador">
-                        Ganador
+                        Seleccionado
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
@@ -45,27 +45,6 @@
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <!-- <th class="py-3 px-6 text-left" data-column="ganador_primera_fase">
-                        1ª
-                        <span class="sort-icons">
-                            <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
-                            <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
-                        </span>
-                    </th>
-                    <th class="py-3 px-6 text-left" data-column="ganador_segunda_fase">
-                        2ª
-                        <span class="sort-icons">
-                            <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
-                            <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
-                        </span>
-                    </th>
-                    <th class="py-3 px-6 text-left" data-column="ganador_tercera_fase">
-                        3ª
-                        <span class="sort-icons">
-                            <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
-                            <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
-                        </span>
-                    </th> -->
                     <th class="py-3 px-6 text-left" data-column="fase_ganada">
                         Fase ganada
                         <span class="sort-icons">
@@ -74,7 +53,7 @@
                         </span>
                     </th>
                     <th class="py-3 px-6 text-left" data-column="fase_ganada">
-                        Millar ganador
+                        Millar seleccionado
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
@@ -107,33 +86,6 @@
                             No
                         {% endif %}
                     </td>
-                    <!-- <td class="py-3 px-6 text-left" data-column="ganador_primera_fase">
-                        {% if participante.ganador_primera_fase is None %}
-                            No se ha sorteado
-                        {% elif participante.ganador_primera_fase %}
-                            Sí
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td>
-                    <td class="py-3 px-6 text-left" data-column="ganador_segunda_fase">
-                        {% if participante.ganador_segunda_fase is None %}
-                            No se ha sorteado
-                        {% elif participante.ganador_segunda_fase %}
-                            Sí
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td>
-                    <td class="py-3 px-6 text-left" data-column="ganador_tercera_fase">
-                        {% if participante.ganador_tercera_fase is None %}
-                            No se ha sorteado
-                        {% elif participante.ganador_tercera_fase %}
-                            Sí
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td> -->
                     <td class="py-3 px-6 text-left" data-column="fase_ganada">
                         <span class="text-blue-600 font-bold text-lg">{{ participante.fase_ganada }}</span>
                     </td>

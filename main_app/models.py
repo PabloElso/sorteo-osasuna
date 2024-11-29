@@ -97,6 +97,10 @@ class Millar:
     @property
     def participantes_ganadores_tercera_fase(self):
         return self.participantes_ganadores.filter(ganador_tercera_fase=True)
+
+    @property
+    def participantes_ganadores_en_este_millar(self):
+        return Participante.objects.filter(millar_ganador=self.codigo)
     
     @property
     def cuenta_participantes_ganadores_primera_fase(self):
@@ -222,10 +226,11 @@ class Sorteo:
         from reportlab.lib.pagesizes import letter
         from reportlab.lib import colors
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer, PageBreak
         from reportlab.lib.units import inch
         import os
         from django.conf import settings
+        from datetime import datetime
 
         subfolder_path = os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')
         if not os.path.exists(subfolder_path):
@@ -236,38 +241,81 @@ class Sorteo:
                                 topMargin=inch, bottomMargin=inch)
         elements = []
         styles = getSampleStyleSheet()
-        title = Paragraph("Resultados del Sorteo", styles['Title'])
-        intro_text = Paragraph("A continuación se presentan los resultados del sorteo:", styles['BodyText'])
+
+        logo_path = os.path.join(settings.STATIC_ROOT, 'escudo.png')
+        if os.path.exists(logo_path):
+            logo = Image(logo_path)
+            logo.drawHeight = 1 * inch
+            logo.drawWidth = 1 * inch
+            elements.append(logo)
+            elements.append(Spacer(1, 0.2 * inch))
+
+        title_style = ParagraphStyle(name='TitleStyle', parent=styles['Title'], fontSize=24, spaceAfter=10, alignment=1, underline=True)
+        title = Paragraph("Elecciones Asamblea", title_style)
         elements.append(title)
-        elements.append(intro_text)
-        data = [['Millar', 'Posición Millar', 'Número Socio', 'Nombre y Apellidos', 'Ganador', 'Fase Ganada', 'Millar Ganador']]
-        for participante in self.participantes:
-            nombre_y_apellidos = Paragraph(participante.nombre_y_apellidos, styles['BodyText'])
-            data.append([
-                participante.millar,
-                participante.posicion_millar,
-                participante.numero_socio,
-                nombre_y_apellidos,
-                "Sí" if participante.ganador else "No",
-                participante.fase_ganada,
-                participante.millar_ganador,
-            ])
-        col_widths = [0.5*inch, 1*inch, 1*inch, 1.5*inch, 0.75*inch, 1*inch]
-        table = Table(data, colWidths=col_widths)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 10),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.lightblue, colors.lightcoral]),
-            ('WORDWRAP', (0, 0), (-1, 0), 'CJK'),
-        ]))
-        elements.append(table)
-        doc.build(elements)
+        elements.append(Spacer(1, 0.2 * inch))
 
+        for millar in self.millares:
+            millar_title_style = ParagraphStyle(name='MillarTitleStyle', parent=styles['Heading2'], fontSize=18, alignment=1)
+            millar_title = Paragraph(f"Millar {millar.codigo}", millar_title_style)
+            elements.append(millar_title)
+            elements.append(Spacer(1, 0.1 * inch))
 
+            winners_table_title = Paragraph("Participantes seleccionados", styles['Heading3'])
+            elements.append(winners_table_title)
+            elements.append(Spacer(1, 0.1 * inch))
+
+            winners_data = [['Número Socio', 'Nombre y Apellidos']]
+            for participante in millar.participantes_ganadores_en_este_millar:
+                winners_data.append([participante.numero_socio, participante.nombre_y_apellidos])
+            winners_table = Table(winners_data)
+            winners_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
+            elements.append(winners_table)
+            elements.append(Spacer(1, 0.1 * inch))
+
+            reserves_table_title = Paragraph("Reservas", styles['Heading3'])
+            elements.append(reserves_table_title)
+            elements.append(Spacer(1, 0.1 * inch))
+
+            reserves_data = [['#', 'Número Socio', 'Nombre y Apellidos']]
+            for idx, participante in enumerate(millar.participantes_no_ganadores.filter(reserva_tercera_fase=True), start=1):
+                reserves_data.append([idx, participante.numero_socio, participante.nombre_y_apellidos])
+            reserves_table = Table(reserves_data)
+            reserves_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
+            elements.append(reserves_table)
+            elements.append(Spacer(1, 0.2 * inch))
+
+            elements.append(Spacer(1, 0.5 * inch))
+            elements.append(PageBreak())
+
+        def add_footer(canvas, doc):
+            footer_text = datetime.now().strftime('%d/%m/%Y %H:%M')
+            footer = Paragraph(footer_text, styles['Normal'])
+            width, height = letter
+            footer.wrapOn(canvas, width, height)
+            footer.drawOn(canvas, inch, 0.5 * inch)
+
+            page_number_text = f"Página {doc.page}"
+            page_number = Paragraph(page_number_text, styles['Normal'])
+            page_number.wrapOn(canvas, width, height)
+            page_number.drawOn(canvas, width - inch, 0.5 * inch)
+
+        doc.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)

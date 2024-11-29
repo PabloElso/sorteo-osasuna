@@ -1,8 +1,84 @@
 <div class="flex flex-col items-center justify-center">
     {% include 'secciones/instrucciones_3.html' %}
     <div class="mt-6">
-        <a href="{% url 'main_app:realizar_sorteo' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-6 px-12 rounded-full shadow-lg text-3xl transition duration-300 ease-in-out transform hover:scale-105">
+        <button id="launch-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-6 px-12 rounded-full shadow-lg text-3xl transition duration-300 ease-in-out transform hover:scale-105">
             Realizar sorteo
-        </a>
+        </button>
+    </div>
+    <div id="loading-popup" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+        <div class="bg-white p-12 rounded-lg shadow-2xl text-center max-w-3xl">
+            <div id="loading-text" class="text-4xl font-bold mb-8 text-blue-600">Realizando sorteo</div>
+            <div id="loading-items" class="text-2xl text-gray-800"></div>
+        </div>
     </div>
 </div>
+
+<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+<script>
+    function getCsrfToken() {
+        return document.getElementById('csrf-token').value;
+    }
+
+    function showLoadingPopup(totalMillares, totalFases, callback) {
+        const loadingPopup = document.getElementById('loading-popup');
+        const loadingText = document.getElementById('loading-text');
+        const loadingItems = document.getElementById('loading-items');
+
+        loadingPopup.classList.remove('hidden');
+        let millar = 1;
+        let fase = 1;
+
+        function getRandomDelay(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function showNextItem() {
+            if (millar <= totalMillares) {
+                loadingItems.textContent = `Millar ${millar}, fase ${fase}`;
+                fase++;
+                if (fase > totalFases) {
+                    fase = 1;
+                    millar++;
+                }
+                setTimeout(showNextItem, getRandomDelay(100, 200));
+            } else {
+                loadingText.textContent = 'Sorteo hecho!';
+                setTimeout(callback, 3000);
+            }
+        }
+
+        showNextItem();
+    }
+
+    document.getElementById('launch-button').addEventListener('click', function() {
+        const totalMillares = {{ total_millares }};
+        const totalFases = 3;
+
+        showLoadingPopup(totalMillares, totalFases, function() {
+            const csrfToken = getCsrfToken();
+            fetch("{% url 'main_app:realizar_sorteo' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>

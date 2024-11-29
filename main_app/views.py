@@ -46,6 +46,8 @@ def ver_sorteo(request):
     context = {}
     context['sorteo_finalizado'] = Participante.objects.filter(ganador=True).count() > 0
     context['total_participantes'] = Participante.objects.all().count()
+    context['total_millares'] = len(crear_sorteo().millares)
+    
     return render(request, 'ver_sorteo.html', context)
 
 
