@@ -116,7 +116,7 @@ class Millar:
         
     @property
     def participantes_no_ganadores(self):
-        return self.participantes.exclude(ganador=True)
+        return Participante.objects.filter(millar=self.codigo).exclude(ganador=True)
     
     @property
     def cuenta_participantes_no_ganadores(self):

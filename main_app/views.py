@@ -64,10 +64,14 @@ def herramientas(request):
 def reiniciar_sistema(request):
     CSVParticipantes.objects.all().delete()
     Participante.objects.all().delete()
+    print(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo'), os.listdir(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')))
     if os.path.exists(CSV_SORTEO):
+        print('Borrando CSV de sorteo...')
         os.remove(CSV_SORTEO)
     if os.path.exists(PDF_SORTEO):
+        print('Borrando PDF de sorteo...')
         os.remove(PDF_SORTEO)
+    print(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo'), os.listdir(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')))
     CSV_INPUT_FOLDER = os.path.join(settings.MEDIA_ROOT, 'csvs')
     if os.path.exists(CSV_INPUT_FOLDER):
         for filename in os.listdir(CSV_INPUT_FOLDER):
@@ -86,10 +90,14 @@ def resetear_ganadores(request):
         reserva_tercera_fase=False,
         millar_ganador=None,
     )
+    print(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo'), os.listdir(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')))
     if os.path.exists(CSV_SORTEO):
+        print('Borrando CSV de sorteo...')
         os.remove(CSV_SORTEO)
     if os.path.exists(PDF_SORTEO):
+        print('Borrando PDF de sorteo...')
         os.remove(PDF_SORTEO)
+    print(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo'), os.listdir(os.path.join(settings.MEDIA_ROOT, 'resultado_sorteo')))
     return redirect('main_app:index')
 
 
