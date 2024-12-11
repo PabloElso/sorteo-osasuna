@@ -6,22 +6,19 @@
     {% else %}
     <div class="container mx-auto py-8 w-2/3">
         <div class="flex justify-center">
-            <h1 class="text-3xl rounded bg-gray-400 border border-gray-700 text-center font-bold p-2 mb-6 inline-block">Resumen de Datos</h1>
+            <h1 class="text-5xl font-bold p-2 mb-6 osasuna-camisetas-font text-left">Resumen de Datos</h1>
         </div>
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-4">Participantes por Millar</h2>
-            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {% for millar in sorteo.millares %}
-                    <li class="text-gray-700 bg-gray-100 p-4 rounded-lg shadow">
-                        <span class="font-bold">Millar {{ forloop.counter }}:</span> {{ millar.cuenta_participantes }} participantes
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="bg-white shadow-md rounded-lg p-6 mt-6">
-            <h2 class="text-2xl font-semibold mb-4">Total de Participantes</h2>
-            <p class="text-gray-700 text-lg">{{ total_participantes }} participantes</p>
-        </div>
+        <h2 class="text-3xl font-semibold mb-4">Participantes</h2>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for millar in sorteo.millares %}
+                <li class="text-gray-700 bg-gray-100 p-4 rounded-lg shadow">
+                    <span class="font-bold">Millar {{ forloop.counter }}:</span> {{ millar.cuenta_participantes }} participantes
+                </li>
+            {% endfor %}
+            <li class="text-gray-700 text-lg bg-gray-200 p-4 rounded-lg shadow">
+                <span class="font-bold underline">Total:</span> {{ total_participantes }} participantes
+            </li>
+        </ul>
     </div>
     {% endif %}
 {% endblock %}

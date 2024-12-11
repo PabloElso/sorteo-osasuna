@@ -1,74 +1,74 @@
-<div class="container mx-auto py-8">
+<div class="container mx-auto py-4">
     <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-blue-500">
+        <table class="min-w-full bg-white">
             <thead>
-                <tr class="bg-blue-500 text-white uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left {% if not_millar %}hidden{% endif %}" data-column="millar">
+                <tr class="bg-rojoosasuna text-white uppercase text-xs leading-tight">
+                    <th class="py-2 px-4 text-left {% if not_millar %}hidden{% endif %}" data-column="millar">
                         Millar
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="posicion_millar">
+                    <th class="py-2 px-4 text-left" data-column="posicion_millar">
                         Posición Millar
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="numero_socio">
+                    <th class="py-2 px-4 text-left" data-column="numero_socio">
                         Nº Socio
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="nombre_y_apellidos">
+                    <th class="py-2 px-4 text-left" data-column="nombre_y_apellidos">
                         Nombre y Apellidos
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="ganador">
+                    <th class="py-2 px-4 text-left" data-column="ganador">
                         Seleccionado
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="reserva_tercera_fase">
+                    <th class="py-2 px-4 text-left" data-column="reserva_tercera_fase">
                         Reserva
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="fase_ganada">
+                    <!-- <th class="py-2 px-4 text-left" data-column="fase_ganada">
                         Fase ganada
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
                     </th>
-                    <th class="py-3 px-6 text-left" data-column="fase_ganada">
+                    <th class="py-2 px-4 text-left" data-column="fase_ganada">
                         Millar seleccionado
                         <span class="sort-icons">
                             <span class="sort-asc hover:text-gray-700 cursor-pointer">&#9660;</span>
                             <span class="sort-desc hover:text-gray-700 cursor-pointer">&#9650;</span>
                         </span>
-                    </th>
+                    </th> -->
                 </tr>
             </thead>
-            <tbody class="text-gray-600 text-sm font-light">
+            <tbody class="text-gray-600 border-gray-500 text-xs font-light">
                 {% for participante in participantes %}
-                <tr class="border-b border-blue-500 {% if participante.ganador %}bg-red-100 hover:bg-red-200{% else %}bg-gray-100 hover:bg-gray-200{% endif %}">
-                    <td class="py-3 px-6 text-left whitespace-nowrap {% if not_millar %}hidden{% endif %}" data-column="millar">{{ participante.millar }}</td>
-                    <td class="py-3 px-6 text-left" data-column="posicion_millar">{{ participante.posicion_millar }}</td>
-                    <td class="py-3 px-6 text-left" data-column="numero_socio">{{ participante.numero_socio }}</td>
-                    <td class="py-3 px-6 text-left" data-column="nombre_y_apellidos">{{ participante.nombre_y_apellidos }}</td>
-                    <td class="py-3 px-6 text-left" data-column="ganador">
+                <tr class="border-b border-gray-500 bg-gray-100 hover:bg-gray-200 {% if participante.ganador %}font-semibold {% endif %}">
+                    <td class="py-2 px-4 text-left whitespace-nowrap {% if not_millar %}hidden{% endif %}" data-column="millar">{{ participante.millar }}</td>
+                    <td class="py-2 px-4 text-left" data-column="posicion_millar">{{ participante.posicion_millar }}</td>
+                    <td class="py-2 px-4 text-left" data-column="numero_socio">{{ participante.numero_socio }}</td>
+                    <td class="py-2 px-4 text-left" data-column="nombre_y_apellidos">{{ participante.nombre_y_apellidos }}</td>
+                    <td class="py-2 px-4 text-left" data-column="ganador">
                         {% if participante.ganador is None %}
                             No se ha sorteado
                         {% elif participante.ganador %}
@@ -77,7 +77,7 @@
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left" data-column="reserva_tercera_fase">
+                    <td class="py-2 px-4 text-left" data-column="reserva_tercera_fase">
                         {% if participante.reserva_tercera_fase is None %}
                             No se ha sorteado
                         {% elif participante.reserva_tercera_fase %}
@@ -86,18 +86,18 @@
                             No
                         {% endif %}
                     </td>
-                    <td class="py-3 px-6 text-left" data-column="fase_ganada">
-                        <span class="text-blue-600 font-bold text-lg">{{ participante.fase_ganada }}</span>
+                    <!-- <td class="py-2 px-4 text-left" data-column="fase_ganada">
+                        <span class="text-red-600 font-bold text-lg">{{ participante.fase_ganada }}</span>
                     </td>
-                    <td class="py-3 px-6 text-left" data-column="fase_ganada">
+                    <td class="py-2 px-4 text-left" data-column="fase_ganada">
                         {% if participante.millar_ganador is None %}
                             No se ha sorteado
                         {% elif participante.millar_ganador %}
-                            <span class="text-blue-600 font-bold text-lg">{{ participante.millar_ganador }}</span>
+                            <span class="text-red-600 font-bold text-lg">{{ participante.millar_ganador }}</span>
                         {% else %}
                             No
                         {% endif %}
-                    </td>
+                    </td> -->
                 </tr>
                 {% endfor %}
             </tbody>

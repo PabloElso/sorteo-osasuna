@@ -1,34 +1,21 @@
 {% load static %}
-
-<nav class="flex select-none items-center justify-between p-6 relative">
-    <!-- Left Section -->
-    <div class="flex items-center space-x-2 bg-rojoosasuna border-b-2 border-amarilloosasuna p-2" style="flex: 1; margin-left: 5%; white-space: nowrap;">
-        <ul class="flex space-x-2">
-            <li><a href="{% url 'main_app:index' %}" class="text-white text-base px-2 py-1 hover:bg-red-600 rounded">Carga de datos</a></li>
-            <li><span class="text-white">|</span></li>
-            <li><a href="{% url 'main_app:resumen_de_datos' %}" class="text-white text-base px-2 py-1 hover:bg-red-600 rounded">Resumen de datos</a></li>
-            <li><span class="text-white">|</span></li>
-            <li><a href="{% url 'main_app:participantes' %}" class="text-white text-base px-2 py-1 hover:bg-red-600 rounded">Participantes</a></li>
-            <li><span class="text-white">|</span></li>
-            <li><a href="{% url 'main_app:millares' %}" class="text-white text-base px-2 py-1 hover:bg-red-600 rounded">Millares</a></li>
-        </ul>
-    </div>
-    
-    <!-- Center Image -->
-    <div class="absolute left-1/2 transform -translate-x-1/2">
-        <img src="{% static 'escudo.png' %}" alt="Logo" class="h-28 w-28">
-    </div>
-    
-    <!-- Right Section -->
-    <div class="flex items-center space-x-2 bg-azulosasuna border-b-2 border-amarilloosasuna p-2" style="flex: 1; justify-content: flex-end; margin-right: 5%; white-space: nowrap;">
-        <ul class="flex space-x-4 mx-2">
-            <li><a href="{% url 'main_app:ver_sorteo' %}" class="text-white font-bold text-base px-2 py-1 hover:bg-blue-600 rounded">Sorteo</a></li>
-            <li><span class="text-white">|</span></li>
-            <li><a href="{% url 'admin:index' %}" class="text-white text-base px-2 py-1 hover:bg-blue-600 rounded">Admin</a></li>
-            <li><span class="text-white">|</span></li>
-            <li><a href="{% url 'main_app:herramientas' %}" class="text-white text-base px-2 py-1 hover:bg-blue-600 rounded">Herramientas</a></li>
-            <li><span class="text-white">|</span></li>
-            <li><a href="{% url 'main_app:ayuda' %}" class="text-white text-base px-2 py-1 hover:bg-blue-600 rounded">Ayuda</a></li>
-        </ul>
-    </div>
-</nav>
+<div class="bg-rojoosasuna text-white w-64 h-full pl-8 p-4 osasuna-camisetas-font">
+    <img src="{% static 'logo.png' %}" alt="Logo" class="my-16">
+    <nav class="space-y-4">
+        <a href="{% url 'main_app:index' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Carga de datos</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'main_app:resumen_de_datos' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Resumen de datos</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'main_app:participantes' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Participantes</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'main_app:millares' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Millares</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'main_app:ver_sorteo' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Sorteo</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'admin:index' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Admin</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'main_app:herramientas' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Herramientas</a>
+        <hr class="border-gray-500 w-3/4 mx-auto">
+        <a href="{% url 'main_app:ayuda' %}" class="block text-xl text-gray-300 hover:text-white transform hover:scale-105 transition-transform duration-200">Ayuda</a>
+    </nav>
+</div>

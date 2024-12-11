@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'OsasunaCamisetas';
+    src: url('../fonts/OsasunaCamisetas.otf') format('opentype');
+}
+
+.osasuna-camisetas-font {
+    font-family: 'OsasunaCamisetas', sans-serif;
+}

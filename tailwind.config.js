@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        rojoosasuna: '#ff001a',
-        azulosasuna: '#002457',
+        rojoosasuna: '#b60f26',
+        azulosasuna: '#00004d',
         amarilloosasuna: '#d4a500',
       },
     },

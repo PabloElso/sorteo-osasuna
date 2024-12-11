@@ -8,25 +8,28 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.6.1"></script>
     <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="icon" type="image/png" href="{% static 'escudo.png' %}">
     <title>Sorteo Osasuna</title>
 </head>
-<body style="background: linear-gradient(to right, #53819b 45%, #53819b 45%, #f56565 55%, #f56565 55%); min-height: 100vh;">    <div class="my-16">
-        {% include 'navbar.html' %}
+<body class="bg-white">
+    <div class="flex">
+        <!-- Navbar -->
+        <div class="fixed top-0 left-0 h-full">
+            {% include 'navbar.html' %}
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-8 ml-64">
+            {% if messages %}
+                <div class="flex items-center justify-center my-4">
+                    {% include 'messages.html' %}
+                </div>
+            {% endif %}
+            <main class="py-12">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
     </div>
-    {% if messages %}
-        <div class="flex items-center justify-center my-4">
-            {% include 'messages.html' %}
-        </div>
-    {% endif %}
-    <main class="flex items-center justify-center py-12">
-        {% block content %}
-        {% endblock %}
-    </main>
-    <footer class="p-4 mt-8">
-        <div class="container mx-auto text-center">
-            <!-- <p class="text-gray-600">&copy; 2024 Sorteo Osasuna. Todos los derechos reservados.</p> -->
-        </div>
-    </footer>
 </body>
 </html>

@@ -5,5 +5,5 @@ __pycache__
 .env
 node_modules/
 staticfiles/
-static/css/*
+static/css/tailwind.css
 media/

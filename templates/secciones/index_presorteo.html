@@ -1,5 +1,7 @@
 {% if total_participantes == 0 %}
     {% include 'secciones/index_csvs.html' %}
 {% else %}
-    {% include 'secciones/instrucciones_tras_cargado_datos.html' %}
+    <div class="flex flex-col items-center justify-center">
+        {% include 'secciones/instrucciones_tras_cargado_datos.html' %}
+    </div>
 {% endif %}

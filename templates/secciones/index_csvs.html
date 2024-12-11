@@ -6,7 +6,7 @@
         {% else %}
             {% include 'secciones/instrucciones_error_varios_csvs.html' %}
     {% endif %}
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+    <div class="bg-gray-100 p-8 rounded-lg shadow-lg max-w-md w-full">
         <div class="text-center">
             {% if total_csvs == 0 %}
                 <p class="text-red-500 text-lg font-semibold">No hay CSV</p>
@@ -16,10 +16,10 @@
                         {% csrf_token %}
                         <p id="fileName" class="m-2 text-gray-700 font-bold text-lg"></p>
                         <input id="csvFileInput" type="file" name="csv_file" class="hidden" required>
-                        <button type="button" id="customButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button type="button" id="customButton" class="bg-rojoosasuna text-white font-bold py-2 px-4 rounded">
                             Seleccionar CSV
                         </button>
-                        <button type="button" id="customSubmitButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        <button type="button" id="customSubmitButton" class="bg-azulosasuna text-white font-bold py-2 px-4 rounded">
                             Subir CSV
                         </button>
                         <button type="submit" class="hidden">Submit</button>
@@ -28,19 +28,19 @@
                     </form>
                 </div>
             {% elif total_csvs == 1 %}
-                <p class="text-green-500 text-lg font-semibold">Hay 1 CSV</p>
+                <p class="text-rojoosasuna text-lg font-semibold">Hay 1 CSV</p>
                 <p class="text-gray-600 mt-2">El archivo CSV se ha cargado correctamente y está listo para su uso.</p>
                 <div class="mt-4 flex justify-center">
-                    <a href="{% url 'main_app:procesar_participantes_csv' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <a href="{% url 'main_app:procesar_participantes_csv' %}" class="bg-azulosasuna text-white font-bold py-2 px-4 rounded">
                         Procesar CSV y generar participantes
                     </a>
                 </div>
 
             {% else %}
-                <p class="text-green-500 text-lg font-semibold">Hay {{ total_csvs }} CSVs</p>
+                <p class="text-rojoosasuna text-lg font-semibold">Hay {{ total_csvs }} CSVs</p>
                 <p class="text-gray-600 mt-2">Debería haber únicamente un archivo CSV con los participantes del sorteo. Por favor, elimina todos los CSV excepto el que va a ser utilizado para seleccionar a los participantes del sorteo.</p>
                 <div class="mt-4 flex justify-center">
-                    <a href="{% url 'admin:main_app_csvparticipantes_changelist' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <a href="{% url 'admin:main_app_csvparticipantes_changelist' %}" class="bg-azulosasuna text-white font-bold py-2 px-4 rounded">
                         Ir a la lista de CSVs
                     </a>
                 </div>

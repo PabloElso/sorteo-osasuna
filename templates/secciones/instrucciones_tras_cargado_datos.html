@@ -1,7 +1,7 @@
-<div class="bg-white p-4 rounded-lg shadow-lg w-1/2 mb-4">
-    <div class="text-center">
-            <p class="text-red-500 text-lg font-semibold">Cargado de datos COMPLETADO</p>
-            <p class="text-gray-600 mt-2">El sistema ha procesado el CSV y ha generado los participantes{% if total_participantes %}, habiendo un total de {{ total_participantes }} participantes{% endif %}. Pueden comprobarse los datos en las secciones apropiadas en la barra superior.</p>
-            <p class="text-gray-600 mt-2">Para continuar, haz click en la sección "Sorteo" presente en la barra superior. En ella se puede pulsar el botón "Realizar sorteo" para generar los resultados del sorteo y obtener a los participantes seleccionados.</p>
+<div class="container mx-auto py-8 w-2/3">
+    <div class="flex justify-center">
+        <h1 class="text-5xl font-bold p-2 mb-6 osasuna-camisetas-font text-left">Cargado de datos COMPLETADO</h1>
     </div>
+    <p class="text-gray-600 mt-2">El sistema ha procesado el CSV y ha generado los participantes{% if total_participantes %}, habiendo un total de {{ total_participantes }} participantes{% endif %}. Pueden comprobarse los datos en las secciones apropiadas en el menú lateral.</p>
+    <p class="text-gray-600 mt-2">Para continuar, haz click en la sección "Sorteo" presente en el menú lateral. En ella se puede pulsar el botón "Realizar sorteo" para generar los resultados del sorteo y obtener a los participantes seleccionados.</p>
 </div>
