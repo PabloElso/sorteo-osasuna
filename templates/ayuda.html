@@ -3,20 +3,45 @@
 {% block content %}
 <div class="container mx-auto py-8 w-2/3">
     <div class="flex justify-center">
-        <h1 class="text-5xl font-bold p-2 mb-6 osasuna-camisetas-font text-left">Notas de desarrollo</h1>
+        <h1 class="text-5xl font-bold p-2 mb-6 osasuna-camisetas-font text-left">Ayuda</h1>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <ul class="list-disc list-inside space-y-4 text-lg text-gray-700">
-            <li class="p-2 bg-gray-100 rounded-md">
-                <span class="font-semibold">Punto 1:</span>
-            </li>
-            <li class="p-2 bg-gray-100 rounded-md">
-                <span class="font-semibold">Punto 2:</span>
-            </li>
-            <li class="p-2 bg-gray-100 rounded-md">
-                <span class="font-semibold">Punto 3:</span>
-            </li>
+    <div class="mt-6 p-4 bg-gray-100 rounded-md">
+        <h2 class="text-xl font-semibold mb-4">¿Cómo funciona el sorteo?</h2>
+        <p class="text-lg text-gray-700 mb-4">
+            El sorteo se divide en 3 fases y se rige por los estatutos del Club Atlético Osasuna. Los participantes se dividen en millares.
+        </p>
+        <p class="text-lg text-gray-700 mb-4">
+            Se comienza aplicando la fase 1 a cada uno de los millares secuencialmente. Si el número de participantes del millar es igual o menor a 33, no se hace nada en esta fase. Si tiene más de 33 participantes, se realiza el sorteo aleatorio seleccionando 33 participantes y marcando al resto de participantes no seleccionados como participantes de reserva.
+        </p>
+        <p class="text-lg text-gray-700 mb-4">
+            Se aplica la fase 2 también secuencialmente a cada millar. No hace nada excepto en los millares que tienen exactamente 33 participantes. En este caso, selecciona a los 33 participantes y no realiza más acciones, al no quedar participantes de reserva.
+        </p>
+        <p class="text-lg text-gray-700 mb-4">
+            Se aplica la fase 3, también secuencialmente a cada millar. Solo aplica cambios en millares con menos de 33 participantes. En estos casos, selecciona a los participantes de dicho millar, calcula el número de participantes seleccionados restantes hasta 33 y selecciona a ese número de participantes de reserva previamente obtenido de los participantes no seleccionados de la primera fase.
+        </p>
+    </div>
+    <div class="mt-6 p-4 bg-gray-100 rounded-md">
+        <h2 class="text-xl font-semibold mb-2">¿Cómo se suben los datos de los participantes?</h2>
+        <p class="text-lg text-gray-700">
+            Los datos de los participantes deben subirse en formato CSV (comma separated values) con 4 columnas:
+        </p>
+        <ul class="list-disc list-inside ml-4 mt-2 text-lg text-gray-700">
+            <li>Millar</li>
+            <li>Orden</li>
+            <li>Nº Socio</li>
+            <li>Nombre</li>
         </ul>
+        <p class="mt-4 text-lg text-gray-700">Ejemplo de archivo CSV:</p>
+        <div class="bg-gray-200 p-4 rounded-md mt-2">
+            <pre class="whitespace-pre-wrap">Millar,Orden,Nº Socio,Nombre
+1,1,421,Javier García García
+5,1,953,Sandra García García
+7,5,1827,Daniel García García
+9,7,2469,Isabel García García</pre>
+        </div>
+        <p class="text-lg text-gray-700">
+            Guardar el archivo con extensión .csv y subirlo en la página principal.
+        </p>
     </div>
 </div>
 {% endblock %}

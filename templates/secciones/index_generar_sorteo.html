@@ -34,12 +34,12 @@
         }
 
         function showNextItem() {
-            if (millar <= totalMillares) {
-                loadingItems.textContent = `Millar ${millar}, fase ${fase}`;
-                fase++;
-                if (fase > totalFases) {
-                    fase = 1;
-                    millar++;
+            if (fase <= totalFases) {
+                loadingItems.textContent = `Fase ${fase}, millar ${millar}`;
+                millar++;
+                if (millar > totalMillares) {
+                    millar = 1;
+                    fase++;
                 }
                 setTimeout(showNextItem, getRandomDelay(100, 200));
             } else {
