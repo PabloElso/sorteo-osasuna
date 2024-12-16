@@ -2,9 +2,10 @@
 
 ## Uso
 
-1. **Descargar imagen**: ```docker pull your-dockerhub-username/herramienta_sorteo:latest```
-2. **Ejecutar aplicación**: ```docker run -p 8000:8000 your-dockerhub-username/herramienta_sorteo:latest```
-3. **Acceso a la aplicación**: En un navegador web, acceder a localhost:8000 donde estará disponible la herramienta.
+1. **Instalar Docker**: En un sistema Windows, descargar la aplicación Docker Desktop e instalarla para poder ejecutar la aplicación del sorteo.
+2. **Descargar imagen**: Una vez instalado Docker, iniciarlo y a través de PowerShell ejecutar: ```docker pull your-dockerhub-username/herramienta_sorteo:latest```
+3. **Ejecutar aplicación**: Una vez descargada la imagen de la herramienta, ejecutarla desde PowerShell con: ```docker run -p 8000:8000 your-dockerhub-username/herramienta_sorteo:latest```
+4. **Acceso a la aplicación**: En un navegador web, acceder a localhost:8000 donde estará disponible la herramienta.
 
 ## Descripción
 
