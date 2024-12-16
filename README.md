@@ -33,7 +33,7 @@ Millar,Orden,Nº Socio,Nombre
 9,7,2469,Isabel García García
 ```
 
-## Información para Desarrolladores
+## Información sobre desarrollador
 
 - **Desarrollador**: Pablo Elso Yoldi
 - **Contacto**: pelso49@gmail.com
