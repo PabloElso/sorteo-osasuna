@@ -3,8 +3,8 @@
 ## Uso
 
 1. **Instalar Docker**: En un sistema Windows, descargar la aplicación Docker Desktop e instalarla para poder ejecutar la aplicación del sorteo.
-2. **Descargar imagen**: Una vez instalado Docker, iniciarlo y a través de PowerShell ejecutar: ```docker pull your-dockerhub-username/herramienta_sorteo:latest```
-3. **Ejecutar aplicación**: Una vez descargada la imagen de la herramienta, ejecutarla desde PowerShell con: ```docker run --rm --name container-sorteo-osasuna -p 8000:8000 your-dockerhub-username/herramienta_sorteo:latest```
+2. **Descargar imagen**: Una vez instalado Docker, iniciarlo y a través de PowerShell ejecutar: ```docker pull pelso49/asamblea-osasuna-sorteo-app:latest```
+3. **Ejecutar aplicación**: Una vez descargada la imagen de la herramienta, ejecutarla desde PowerShell con: ```docker run --rm --name container-sorteo-osasuna -p 8000:8000 pelso49/asamblea-osasuna-sorteo-app:latest```
 4. **Acceso a la aplicación**: En un navegador web, acceder a localhost:8000 donde estará disponible la herramienta.
 
 ## Descripción
